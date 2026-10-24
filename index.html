@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BD Tax Zakat Fitra Calculator 2026 - S.Mohammad Team</title>
+<style>
+*{box-sizing:border-box}body{font-family:sans-serif;max-width:450px;margin:0 auto;background:#f5f5f5;padding:0}
+.header{background:#006A4E;color:white;padding:15px;text-align:center}
+.tabs{display:flex;background:white;position:sticky;top:0;z-index:10}
+.tab{flex:1;padding:12px;text-align:center;cursor:pointer;border-bottom:3px solid #ddd;font-weight:bold;font-size:13px}
+.tab.active{border-color:#006A4E;color:#006A4E;background:#e8f5e9}
+.panel{display:none;padding:15px;background:white;margin:10px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.panel.active{display:block}
+input,select{width:100%;padding:11px;margin:6px 0;border:1px solid #ccc;border-radius:8px}
+.btn{width:100%;padding:12px;border:0;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer;margin-top:8px}
+.btn-tax{background:#006A4E;color:white}.btn-zakat{background:#8B4513;color:white}.btn-fitra{background:#1A237E;color:white}
+.result{background:#f1f8e9;padding:12px;border-radius:8px;margin-top:10px;line-height:1.6;border:1px dashed #81c784}
+.footer{background:#0a2e1d;color:#c8e6c9;text-align:center;padding:15px;font-size:12px;margin-top:15px}
+.bkash{background:linear-gradient(90deg,#e2136e,#006A4E);color:white;padding:12px;border-radius:10px;text-align:center;margin-top:10px}
+.bkash a{color:white;text-decoration:none;font-weight:bold;font-size:16px}
+</style>
+</head>
+<body>
+<div class="header"><h2 style="margin:0">🇧🇩 BD Calculator 2026</h2><div style="font-size:11px;color:#c8e6c9">Tax | Zakat | Fitra - S.Mohammad Team, Bangladesh</div></div>
+
+<div class="tabs">
+<div class="tab active" onclick="showTab(event,'tax')">TAX</div>
+<div class="tab" onclick="showTab(event,'zakat')">ZAKAT</div>
+<div class="tab" onclick="showTab(event,'fitra')">FITRA</div>
+</div>
+
+<div id="tax" class="panel active">
+<h3>আয়কর ২০২৫-২৬</h3>
+<label>বার্ষিক আয় (৳)</label><input type="number" id="t_income" placeholder="800000">
+<label>ক্যাটাগরি</label>
+<select id="t_cat"><option value="375000">General (3.75L free)</option><option value="425000">Female/65+ (4.25L)</option><option value="500000">Disabled (5L)</option></select>
+<label><input type="checkbox" id="t_sal" checked> চাকুরীজীবি</label>
+<button class="btn btn-tax" onclick="calcTax()">Calculate Tax</button>
+<div id="t_res" class="result"></div>
+</div>
+
+<div id="zakat" class="panel">
+<h3>যাকাত ক্যালকুলেটর</h3>
+<label>নগদ + ব্যাংক (৳)</label><input type="number" id="z_cash">
+<label>স্বর্ণ (৳)</label><input type="number" id="z_gold"><input type="number" id="z_gGram" placeholder="গ্রাম থাকলে লিখুন">
+<label>অন্যান্য + পাওনা (৳)</label><input type="number" id="z_other">
+<label>ঋণ বাদ (৳)</label><input type="number" id="z_debt">
+<button class="btn btn-zakat" onclick="calcZakat()">যাকাত বের করুন</button>
+<div id="z_res" class="result">Silver Nisab ~৳8.8L</div>
+<div class="bkash">💝 Zakat Donate via bKash<br><a href="tel:01742701642">01742701642</a><br><small>Scan QR or Send Money</small></div>
+</div>
+
+<div id="fitra" class="panel">
+<h3>ফিতরা ২০২৬</h3>
+<label>সদস্য সংখ্যা</label><input type="number" id="f_count" value="5">
+<label>ধরন</label>
+<select id="f_type"><option value="115">আটা ৳115</option><option value="400">যব ৳400</option><option value="820">কিশমিশ ৳820</option><option value="1690">খেজুর ৳1690</option><option value="2970">পনির ৳2970</option></select>
+<button class="btn btn-fitra" onclick="calcFitra()">মোট ফিতরা</button>
+<div id="f_res" class="result"></div>
+</div>
+
+<div class="footer">
+Developed by <b>S.Mohammad Team, Bangladesh</b><br>
+bKash Support: 01742701642<br>
+<a href="#" style="color:#81c784">Privacy Policy</a> | Version 2026.1<br>
+© 2026 All Rights Reserved
+</div>
+
+<script>
+function showTab(e,id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');e.target.classList.add('active');}
+function calcTax(){let g=+document.getElementById('t_income').value||0,f=+document.getElementById('t_cat').value,s=document.getElementById('t_sal').checked;let taxble=s?g-Math.min(g/3,500000):g;let rem=Math.max(0,taxble-f);let slabs=[[300000,0.10],[400000,0.15],[500000,0.20],[2000000,0.25],[Infinity,0.30]];let tax=0,tmp=rem;for(let[lim,rate]of slabs){if(tmp<=0)break;let tk=Math.min(tmp,lim);tax+=tk*rate;tmp-=tk;}if(taxble>f&&tax>0&&tax<5000)tax=5000;document.getElementById('t_res').innerHTML=`<b>Total Tax: ৳${Math.round(tax).toLocaleString()}</b><br>Monthly: ৳${Math.round(tax/12).toLocaleString()}`;}
+const S_PRICE=1450,NISAB=612.36*S_PRICE,G_PRICE=12500;
+function calcZakat(){let gram=+document.getElementById('z_gGram').value||0;if(gram>0)document.getElementById('z_gold').value=Math.round(gram*G_PRICE);let total=(+document.getElementById('z_cash').value||0)+(+document.getElementById('z_gold').value||0)+(+document.getElementById('z_other').value||0)-(+document.getElementById('z_debt').value||0);let zakat=total*0.025;document.getElementById('z_res').innerHTML=`সম্পদ: ৳${total.toLocaleString()}<br>${total>=NISAB?`<b>যাকাত: ৳${Math.round(zakat).toLocaleString()}</b>`:`<b>ফরজ নয়</b>`}`;}
+function calcFitra(){let c=+document.getElementById('f_count').value||0,r=+document.getElementById('f_type').value;document.getElementById('f_res').innerHTML=`<b>মোট ফিতরা: ৳${(c*r).toLocaleString()}</b>`;}
+</script>
+</body>
+</html>
